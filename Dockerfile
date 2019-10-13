@@ -1,7 +1,11 @@
 # Base image
 FROM ubuntu:18.04
+ARG build_core
+ARG project_home
 
-# prerequisites: https://github.com/pmem/pmemkv/blob/master/INSTALLING.md#ubuntu
+RUN echo "Build using $build_core cores"
+
+# Install prerequisites: https://github.com/pmem/pmemkv/blob/master/INSTALLING.md#ubuntu
 RUN apt update && apt install -y \
 	autoconf \
 	automake \
@@ -13,25 +17,48 @@ RUN apt update && apt install -y \
 	libtool \
 	rapidjson-dev \
 	git \
-	pkg-config
+	pkg-config \
+	vim
 
-# PMDK
-RUN git clone https://github.com/pmem/pmdk
-RUN cd pmdk && make && make install
+# Create directory structure
+RUN mkdir -p $project_home && cd $project_home && mkdir src && mkdir lib
 
-# libpmemobj-cpp
-RUN git clone https://github.com/pmem/libpmemobj-cpp
-RUN cd libpmemobj-cpp && mkdir build && cd build && cmake .. && make && make install
+# Install PMDK
+RUN cd $project_home/lib && git clone https://github.com/pmem/pmdk && \
+	cd pmdk && \
+	make -j$build_core && \
+	make install
 
-# memkind
+# Install libpmemobj-cpp
+RUN cd $project_home/lib && git clone https://github.com/pmem/libpmemobj-cpp && \
+	cd libpmemobj-cpp && \
+	mkdir build && \
+	cd build && \
+	cmake .. && \
+	make -j$build_core && \
+	make install
+
+# Install memkind
 # The extra stuff in front of ./build.sh prevents running the tests.
-RUN git clone https://github.com/memkind/memkind
-RUN cd memkind && MAKEOPTS=check_PROGRAMS= ./build.sh && make install
+RUN cd $project_home/lib && git clone https://github.com/memkind/memkind && \
+	cd memkind && \
+	MAKEOPTS=check_PROGRAMS= ./build.sh && \
+	make install
 
-# gtest
+# Install gtest
 RUN apt install -y libgtest-dev
-RUN cd /usr/src/gtest && cmake CMakeLists.txt && make && cp *.a /usr/lib
+RUN cd /usr/src/gtest && \
+	cmake CMakeLists.txt && \
+	make -j$build_core && \
+	cp *.a /usr/lib
 
-# pmemkv
-RUN git clone https://github.com/pmem/pmemkv
-RUN cd pmemkv && mkdir build && cd build && cmake .. && make
+# Build pmemkv
+RUN cd $project_home/lib && \git clone https://github.com/pmem/pmemkv && \
+	cd pmemkv && \
+	mkdir build && \
+	cd build && \
+	cmake .. && \
+	make -j$build_core
+
+# Copy example code
+ADD example $project_home/example
