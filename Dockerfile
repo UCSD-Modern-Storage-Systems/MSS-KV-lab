@@ -20,6 +20,8 @@ RUN apt update && apt install -y \
 	pkg-config \
 	vim
 
+RUN apt install -y ndctl
+
 # Create directory structure
 RUN mkdir -p $project_home && cd $project_home && mkdir src && mkdir lib
 
@@ -57,7 +59,7 @@ RUN cd $project_home/lib && \git clone https://github.com/pmem/pmemkv && \
 	cd pmemkv && \
 	mkdir build && \
 	cd build && \
-	cmake .. && \
+	cmake .. -DENGINE_CMAP=ON -DENGINE_STREE=ON -DENGINE_TREE3=ON && \
 	make -j$build_core
 
 # Copy example code
