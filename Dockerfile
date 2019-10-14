@@ -61,4 +61,4 @@ RUN cd $project_home/lib && \git clone https://github.com/pmem/pmemkv && \
 	make -j$build_core
 
 # Copy example code
-ADD example $project_home/example
+ADD src $project_home/src
