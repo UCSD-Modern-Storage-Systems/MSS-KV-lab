@@ -64,3 +64,5 @@ RUN cd $project_home/lib && \git clone https://github.com/pmem/pmemkv && \
 
 # Copy example code
 ADD src $project_home/src
+
+ENV LD_LIBRARY_PATH=$project_home/lib/pmemkv/build
