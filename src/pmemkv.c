@@ -5,8 +5,6 @@
 #include "pmkv.h"
 #include "libpmemkv.h"
 
-#define MAX_VAL_LEN 64
-
 pmkv* pmkv_open(const char *path, size_t pool_size, int force_create)
 {
 	pmemkv_config *cfg = pmemkv_config_new();
@@ -32,38 +30,28 @@ void pmkv_close(pmkv *kv)
 	pmemkv_close((pmemkv_db*)kv);
 }
 
-void* pmkv_get(pmkv *kv, const char *key, size_t key_size)
+int pmkv_get(pmkv *kv, const char *key, size_t key_size, char *val, size_t *out_val_size)
 {
 	pmemkv_db *db = (pmemkv_db*)kv;
-	char *val = malloc(MAX_VAL_LEN);
-	int s = pmemkv_get_copy(db, key, key_size, val, MAX_VAL_LEN, NULL);
-	if (s == PMEMKV_STATUS_OK)
-		return val;
-	else {
-		free(val);
-		return NULL;
-	}
+	return pmemkv_get_copy(db, key, key_size, val, MAX_VAL_LEN, out_val_size);
 }
 
-void pmkv_put(pmkv *kv, const char *key, size_t key_size, const char *value, size_t value_size)
+int pmkv_put(pmkv *kv, const char *key, size_t key_size, const char *val, size_t val_size)
 {
 	pmemkv_db *db = (pmemkv_db*)kv;
-	int s = pmemkv_put(db, key, key_size, value, value_size);
-	assert(s == PMEMKV_STATUS_OK);
+	return pmemkv_put(db, key, key_size, val, val_size);
 }
 
-void pmkv_del(pmkv *kv, const char *key, size_t key_size)
+int pmkv_del(pmkv *kv, const char *key, size_t key_size)
 {
 	pmemkv_db *db = (pmemkv_db*)kv;
-	int s = pmemkv_remove(db, key, key_size);
-	assert(s == PMEMKV_STATUS_OK);
+	return pmemkv_remove(db, key, key_size);
 }
 
-void pmkv_count_all(pmkv *kv, size_t *cnt)
+int pmkv_count_all(pmkv *kv, size_t *cnt)
 {
 	pmemkv_db *db = (pmemkv_db*)kv;
-	int s = pmemkv_count_all(db, cnt);
-	assert(s == PMEMKV_STATUS_OK);
+	return pmemkv_count_all(db, cnt);
 }
 
 int pmkv_exists(pmkv *kv, const char *key, size_t key_size)
