@@ -12,6 +12,8 @@ void pmkv_close(pmkv *kv);
 void* pmkv_get(pmkv *kv, const char *key);
 void pmkv_put(pmkv *kv, const char *key, const char *value);
 void pmkv_del(pmkv *kv, const char *key);
+void pmkv_count_all(pmkv *kv, size_t *cnt);
+int pmkv_exists(pmkv *kv, const char *key);
 
 #ifdef __cplusplus
 }

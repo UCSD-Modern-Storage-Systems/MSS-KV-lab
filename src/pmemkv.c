@@ -27,6 +27,11 @@ pmkv* pmkv_open(const char *path, size_t pool_size, int force_create)
 	return (pmkv*)db;
 }
 
+void pmkv_close(pmkv *kv)
+{
+	pmemkv_close((pmemkv_db*)kv);
+}
+
 void* pmkv_get(pmkv *kv, const char *key)
 {
 	pmemkv_db *db = (pmemkv_db*)kv;
@@ -50,7 +55,16 @@ void pmkv_del(pmkv *kv, const char *key)
 	assert(s == PMEMKV_STATUS_OK);
 }
 
-void pmkv_close(pmkv *kv)
+void pmkv_count_all(pmkv *kv, size_t *cnt)
 {
-	pmemkv_close((pmemkv_db*)kv);
+	pmemkv_db *db = (pmemkv_db*)kv;
+	int s = pmemkv_count_all(db, cnt);
+	assert(s == PMEMKV_STATUS_OK);
+}
+
+int pmkv_exists(pmkv *kv, const char *key)
+{
+	pmemkv_db *db = (pmemkv_db*)kv;
+	int s = pmemkv_exists(db, key, strlen(key));
+	return s == PMEMKV_STATUS_OK ? 1 : 0;
 }

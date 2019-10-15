@@ -32,3 +32,14 @@ void pmkv_close(pmkv *kv)
 {
 	// TODO: implement this
 }
+
+void pmkv_count_all(pmkv *kv, size_t *cnt)
+{
+	// TODO: implement this
+}
+
+int pmkv_exists(pmkv *kv, const char *key)
+{
+	// TODO: implement this
+	return 0;
+}
