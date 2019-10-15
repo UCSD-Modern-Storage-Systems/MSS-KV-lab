@@ -23,7 +23,7 @@ EXAMPLE_STATIC_LIB = libpmkv_ex.a
 
 all: lib
 
-lib: $(STATIC_LIB)
+lib: $(STATIC_LIB) $(EXAMPLE_STATIC_LIB)
 
 %.o: %.c
 	$(GCC) $(GCCFLAGS) $(INC_PATH) -c $< -o $@ $(LIB_PATH) $(LIBS)

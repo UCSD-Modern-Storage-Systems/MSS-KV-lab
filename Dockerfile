@@ -29,6 +29,7 @@ RUN mkdir -p $project_home && cd $project_home && mkdir src && mkdir include && 
 ADD src $project_home/src
 ADD include $project_home/include
 ADD test $project_home/test
+ADD Makefile.docker $project_home/Makefile
 
 # Install PMDK
 RUN cd $project_home/lib && git clone https://github.com/pmem/pmdk && \
@@ -67,4 +68,5 @@ RUN cd $project_home/lib && \git clone https://github.com/pmem/pmemkv && \
 	cmake .. -DENGINE_CMAP=ON -DENGINE_STREE=ON -DENGINE_TREE3=ON && \
 	make -j$build_core
 
+# Set shared lib path
 ENV LD_LIBRARY_PATH=$project_home/lib/pmemkv/build
