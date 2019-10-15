@@ -1,5 +1,5 @@
-
-
-
 image:
-	sudo docker build --build-arg build_core=8 --build-arg project_home=/home/cse291a .
+	sudo docker build -t nvsl/pmkv:latest --build-arg build_core=8 --build-arg project_home=/home/cse291a .
+
+run:
+	sudo docker run --privileged -i -t nvsl/pmkv:latest
