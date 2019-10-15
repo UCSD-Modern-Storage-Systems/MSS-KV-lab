@@ -10,7 +10,7 @@ PMEMKV_HOME = ../lib/pmemkv
 PMEMKV_INC = $(PMEMKV_HOME)/src
 PMEMKV_LIB = $(PMEMKV_HOME)/build
 
-INC_DIR = ./ $(PMEMKV_INC)
+INC_DIR = ../include $(PMEMKV_INC)
 INC_PATH = $(foreach d, $(INC_DIR), -I$d)
 
 LIB_DIR = ./ $(PMEMKV_LIB)

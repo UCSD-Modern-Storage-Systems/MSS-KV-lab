@@ -22,8 +22,13 @@ RUN apt update && apt install -y \
 
 RUN apt install -y ndctl
 
-# Create directory structure
-RUN mkdir -p $project_home && cd $project_home && mkdir src && mkdir lib && mkdir test
+# Create code structure
+RUN mkdir -p $project_home && cd $project_home && mkdir src && mkdir include && mkdir lib && mkdir test
+
+# Copy basic codes
+ADD src $project_home/src
+ADD include $project_home/include
+ADD test $project_home/test
 
 # Install PMDK
 RUN cd $project_home/lib && git clone https://github.com/pmem/pmdk && \
@@ -61,11 +66,5 @@ RUN cd $project_home/lib && \git clone https://github.com/pmem/pmemkv && \
 	cd build && \
 	cmake .. -DENGINE_CMAP=ON -DENGINE_STREE=ON -DENGINE_TREE3=ON && \
 	make -j$build_core
-
-# Copy example code
-ADD src $project_home/src
-
-# Copy test code
-ADD test $project_home/test
 
 ENV LD_LIBRARY_PATH=$project_home/lib/pmemkv/build
