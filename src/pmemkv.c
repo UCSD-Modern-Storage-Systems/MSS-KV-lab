@@ -32,11 +32,11 @@ void pmkv_close(pmkv *kv)
 	pmemkv_close((pmemkv_db*)kv);
 }
 
-void* pmkv_get(pmkv *kv, const char *key)
+void* pmkv_get(pmkv *kv, const char *key, size_t key_size)
 {
 	pmemkv_db *db = (pmemkv_db*)kv;
 	char *val = malloc(MAX_VAL_LEN);
-	int s = pmemkv_get_copy(db, key, strlen(key), val, MAX_VAL_LEN, NULL);
+	int s = pmemkv_get_copy(db, key, key_size, val, MAX_VAL_LEN, NULL);
 	if (s == PMEMKV_STATUS_OK)
 		return val;
 	else {
@@ -45,17 +45,17 @@ void* pmkv_get(pmkv *kv, const char *key)
 	}
 }
 
-void pmkv_put(pmkv *kv, const char *key, const char *value)
+void pmkv_put(pmkv *kv, const char *key, size_t key_size, const char *value, size_t value_size)
 {
 	pmemkv_db *db = (pmemkv_db*)kv;
-	int s = pmemkv_put(db, key, strlen(key), value, strlen(value));
+	int s = pmemkv_put(db, key, key_size, value, value_size);
 	assert(s == PMEMKV_STATUS_OK);
 }
 
-void pmkv_del(pmkv *kv, const char *key)
+void pmkv_del(pmkv *kv, const char *key, size_t key_size)
 {
 	pmemkv_db *db = (pmemkv_db*)kv;
-	int s = pmemkv_remove(db, key, strlen(key));
+	int s = pmemkv_remove(db, key, key_size);
 	assert(s == PMEMKV_STATUS_OK);
 }
 
@@ -66,9 +66,9 @@ void pmkv_count_all(pmkv *kv, size_t *cnt)
 	assert(s == PMEMKV_STATUS_OK);
 }
 
-int pmkv_exists(pmkv *kv, const char *key)
+int pmkv_exists(pmkv *kv, const char *key, size_t key_size)
 {
 	pmemkv_db *db = (pmemkv_db*)kv;
-	int s = pmemkv_exists(db, key, strlen(key));
+	int s = pmemkv_exists(db, key, key_size);
 	return s == PMEMKV_STATUS_OK ? 1 : 0;
 }
