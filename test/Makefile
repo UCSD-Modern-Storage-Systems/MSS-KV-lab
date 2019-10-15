@@ -6,8 +6,11 @@ GTEST_HOME = /usr/src/gtest
 GTEST_INC = $(GTEST_HOME)/include
 GTEST_LIB = $(GTEST_HOME)/build/lib
 
+# pmemkv
+PMEMKV_INC = ../lib/pmemkv/src
+
 # include
-INC_DIR = ../include $(GTEST_INC)
+INC_DIR = ../include $(GTEST_INC) $(PMEMKV_INC)
 INC_PATH = $(foreach d, $(INC_DIR), -I$d)
 
 # library
