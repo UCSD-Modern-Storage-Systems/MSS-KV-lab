@@ -37,8 +37,12 @@ void* pmkv_get(pmkv *kv, const char *key)
 	pmemkv_db *db = (pmemkv_db*)kv;
 	char *val = malloc(MAX_VAL_LEN);
 	int s = pmemkv_get_copy(db, key, strlen(key), val, MAX_VAL_LEN, NULL);
-	assert(s == PMEMKV_STATUS_OK);
-	return val;
+	if (s == PMEMKV_STATUS_OK)
+		return val;
+	else {
+		free(val);
+		return NULL;
+	}
 }
 
 void pmkv_put(pmkv *kv, const char *key, const char *value)
