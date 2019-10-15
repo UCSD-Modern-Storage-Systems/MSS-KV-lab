@@ -18,15 +18,27 @@ LIB_PATH = $(foreach d, $(LIB_DIR), -L$d)
 
 LIBS = -lpmemkv -pthread
 
-all: pmkv_test
+STATIC_LIB = libpmkv.a
+EXAMPLE_STATIC_LIB = libpmkv_ex.a
 
-pmkv_test: pmkv_test.c pmemkv.c
-	$(GCC) $(GCCFLAGS) $(INC_PATH) -o $@ $^ $(LIB_PATH) $(LIBS)
+all: lib
 
-%: %.c
-	$(GCC) $(GCCFLAGS) $(INC_PATH) -o $@ $< $(LIB_PATH) $(LIBS)
+lib: $(STATIC_LIB)
+
+%.o: %.c
+	$(GCC) $(GCCFLAGS) $(INC_PATH) -c $< -o $@ $(LIB_PATH) $(LIBS)
+
+$(STATIC_LIB): pmkv.o
+	ar rsv $@ $<
+
+# example
+example: $(EXAMPLE_STATIC_LIB)
+
+$(EXAMPLE_STATIC_LIB): pmemkv.o
+	ar rsv $@ $<
+
 
 .PHONY: clean
 
 clean:
-	rm -rf pmkv_test
+	rm -f *.o $(STATIC_LIB) $(EXAMPLE_STATIC_LIB)
