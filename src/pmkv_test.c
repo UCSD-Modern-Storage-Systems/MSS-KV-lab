@@ -7,13 +7,13 @@
 int main(int argc, char *argv[])
 {
 	if (argc < 3) {
-		fprintf(stderr, "Usage: ./%s kvfile size\n", argv[0]);
+		fprintf(stderr, "Usage: %s kvfile size\n", argv[0]);
 		exit(1);
 	}
 	char *path = argv[1];
 	size_t pool_size = atol(argv[2]);
 
-	pmkv *kv = pmkv_open(path, pool_size);
+	pmkv *kv = pmkv_open(path, pool_size, 1);
 	pmkv_put(kv, "key1", "value1");
 	char *val = (char*)pmkv_get(kv, "key1");
 	assert(!strcmp(val, "value1"));

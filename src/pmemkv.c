@@ -7,7 +7,7 @@
 
 #define MAX_VAL_LEN 64
 
-pmkv* pmkv_open(char *path, size_t pool_size)
+pmkv* pmkv_open(char *path, size_t pool_size, int force_create)
 {
 	pmemkv_config *cfg = pmemkv_config_new();
 	assert(cfg != NULL);
@@ -15,6 +15,8 @@ pmkv* pmkv_open(char *path, size_t pool_size)
 	int s = pmemkv_config_put_string(cfg, "path", path);
 	assert(s == PMEMKV_STATUS_OK);
 	s = pmemkv_config_put_uint64(cfg, "size", pool_size);
+	assert(s == PMEMKV_STATUS_OK);
+	s = pmemkv_config_put_uint64(cfg, "force_create", force_create);
 	assert(s == PMEMKV_STATUS_OK);
 
 	pmemkv_db *db = NULL;
