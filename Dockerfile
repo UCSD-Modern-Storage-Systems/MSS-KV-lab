@@ -23,7 +23,7 @@ RUN apt update && apt install -y \
 RUN apt install -y ndctl
 
 # Create directory structure
-RUN mkdir -p $project_home && cd $project_home && mkdir src && mkdir lib
+RUN mkdir -p $project_home && cd $project_home && mkdir src && mkdir lib && mkdir test
 
 # Install PMDK
 RUN cd $project_home/lib && git clone https://github.com/pmem/pmdk && \
@@ -64,5 +64,8 @@ RUN cd $project_home/lib && \git clone https://github.com/pmem/pmemkv && \
 
 # Copy example code
 ADD src $project_home/src
+
+# Copy test code
+ADD test $project_home/test
 
 ENV LD_LIBRARY_PATH=$project_home/lib/pmemkv/build
