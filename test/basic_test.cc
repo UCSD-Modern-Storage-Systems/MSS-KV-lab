@@ -25,7 +25,7 @@ public:
 	}
 
 	status get(string_view key, std::string *value) {
-		void *v = pmkv_get(_kv, key.data());
+		void *v = pmkv_get(_kv, key.data(), key.size());
 		if (!v)
 			return status::NOT_FOUND;
 		*value = std::string((char*)v);
@@ -33,12 +33,12 @@ public:
 	}
 
 	status put(string_view key, string_view value) {
-		pmkv_put(_kv, key.data(), value.data());
+		pmkv_put(_kv, key.data(), key.size(), value.data(), value.size());
 		return status::OK;
 	}
 
 	status remove(string_view key) {
-		pmkv_del(_kv, key.data());
+		pmkv_del(_kv, key.data(), key.size());
 		return status::OK;
 	}
 
@@ -48,7 +48,7 @@ public:
 	}
 
 	status exists(string_view key) {
-		if (pmkv_exists(_kv, key.data()))
+		if (pmkv_exists(_kv, key.data(), key.size()))
 			return status::OK;
 		return status::NOT_FOUND;
 	}
