@@ -14,5 +14,10 @@ LIB_DIR = ../src $(PMEMKV_LIB)
 LIB_PATH = $(foreach d, $(LIB_DIR), -L$d)
 LIBS = -l:libpmkv_ex.a -ldl -pthread -lpmemkv
 
-bench:
+pmkv_bench:
 	g++ $(GPPFLAGS) ./db_bench.cc ./port/port_posix.cc ./util/env.cc ./util/env_posix.cc ./util/histogram.cc ./util/logging.cc ./util/status.cc ./util/testutil.cc -o $@ $(INC_PATH) $(LIB_PATH) $(LIBS)
+
+.PHONY: pmkv_bench clean
+
+clean:
+	rm -f pmkv_bench

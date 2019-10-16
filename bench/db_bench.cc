@@ -24,10 +24,13 @@
 #include "mutexlock.h"
 #include "random.h"
 #include "libpmemkv.hpp"
+extern "C" {
+#include "pmkv.h"
+}
 
 static const std::string USAGE =
-        "pmemkv_bench\n"
-        "--engine=<name>            (storage engine name, default: cmap)\n"
+        "pmkv_bench\n"
+        "--engine=<name>            (storage engine name, default: pmkv)\n"
         "--db=<location>            (path to persistent pool, default: /dev/shm/pmemkv)\n"
         "                           (note: file on DAX filesystem, DAX device, or poolset file)\n"
         "--db_size_in_gb=<integer>  (size of persistent pool to create in GB, default: 0)\n"
@@ -60,7 +63,7 @@ static const char *FLAGS_benchmarks =
         "fillrandom,overwrite,fillseq,readrandom,readseq,readrandom,readmissing,readrandom,deleteseq";
 
 // Default engine name
-static const char *FLAGS_engine = "cmap";
+static const char *FLAGS_engine = "pmkv";
 
 // Number of key/values to place in database
 static int FLAGS_num = 1000000;
@@ -94,6 +97,7 @@ static const int FLAGS_duration = 0;
 static int FLAGS_readwritepercent = 90;
 
 using namespace leveldb;
+using namespace pmem::kv;
 
 leveldb::Env *g_env = NULL;
 
@@ -359,9 +363,64 @@ private:
     time_point start_at_;
 };
 
+class PMKVWrapper {
+public:
+	PMKVWrapper(std::string path, size_t size, bool create)
+	{
+		_kv = pmkv_open(path.c_str(), size, create ? 1 : 0);
+		if (_kv == NULL)
+			throw std::runtime_error("Failed to open kv file");
+	}
+
+	~PMKVWrapper()
+	{
+		pmkv_close(_kv);
+	}
+
+	status get(string_view key, std::string *value) {
+		char val[MAX_VAL_LEN];
+		size_t val_size;
+		int s = pmkv_get(_kv, key.data(), key.size(), val, &val_size);
+		if (s)
+			return status::NOT_FOUND;
+		value->assign(val, val_size);
+		return status::OK;
+	}
+
+	status put(string_view key, string_view value) {
+		int s = pmkv_put(_kv, key.data(), key.size(), value.data(), value.size());
+		if (s)
+			throw std::runtime_error("Failed to put with an undefined error");
+		return status::OK;
+	}
+
+	status remove(string_view key) {
+		int s = pmkv_del(_kv, key.data(), key.size());
+		if (s)
+			return status::NOT_FOUND;
+		return status::OK;
+	}
+
+	status count_all(std::size_t &cnt) {
+		int s = pmkv_count_all(_kv, &cnt);
+		if (s)
+			throw std::runtime_error("Failed to count all with an undefined error");
+		return status::OK;
+	}
+
+	status exists(string_view key) {
+		if (!pmkv_exists(_kv, key.data(), key.size()))
+			return status::NOT_FOUND;
+		return status::OK;
+	}
+
+private:
+	pmkv* _kv;
+};
+
 class Benchmark {
 private:
-    pmem::kv::db *kv_;
+    PMKVWrapper *kv_;
     int num_;
     int value_size_;
     int key_size_;
@@ -617,33 +676,14 @@ private:
 		assert(kv_ == NULL);
 		auto start = g_env->NowMicros();
 		auto size = 1024ULL * 1024ULL * 1024ULL * FLAGS_db_size_in_gb;
-		pmem::kv::config cfg;
-
-		auto cfg_s = cfg.put_string("path", FLAGS_db);
-
-		if (cfg_s != pmem::kv::status::OK)
-			throw std::runtime_error("putting 'path' to config failed");
-
-		if (fresh_db) {
-			cfg_s = cfg.put_uint64("force_create", 1);
-			if (cfg_s != pmem::kv::status::OK)
-				throw std::runtime_error(
-					"putting 'force_create' to config failed");
-
-			cfg_s = cfg.put_uint64("size", size);
-
-			if (cfg_s != pmem::kv::status::OK)
-				throw std::runtime_error(
-					"putting 'size' to config failed");
-		}
-
-		kv_ = new pmem::kv::db;
-		auto s = kv_->open(FLAGS_engine, std::move(cfg));
-
-		if (s !=  pmem::kv::status::OK) {
+		std::string path(FLAGS_db);
+		if (fresh_db)
+			std::remove(FLAGS_db);
+		kv_ = new PMKVWrapper(path, size, fresh_db);
+		if (!kv_) {
 			fprintf(stderr,
-				"Cannot start engine (%s) for path (%s) with %i GB capacity\n%s\n\nUSAGE: %s",
-				FLAGS_engine, FLAGS_db, FLAGS_db_size_in_gb, pmem::kv::errormsg().c_str(),
+				"Cannot start pmkv for path (%s) with %i GB capacity\n%s\n\nUSAGE: %s",
+				FLAGS_db, FLAGS_db_size_in_gb, pmem::kv::errormsg().c_str(),
 				USAGE.c_str());
 			exit(-42);
 		}
