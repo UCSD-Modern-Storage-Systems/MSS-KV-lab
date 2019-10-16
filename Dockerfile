@@ -23,12 +23,13 @@ RUN apt update && apt install -y \
 RUN apt install -y ndctl
 
 # Create code structure
-RUN mkdir -p $project_home && cd $project_home && mkdir src && mkdir include && mkdir lib && mkdir test
+RUN mkdir -p $project_home && cd $project_home && mkdir src && mkdir include && mkdir lib && mkdir test && mkdir bench
 
 # Copy basic codes
 ADD src $project_home/src
 ADD include $project_home/include
 ADD test $project_home/test
+ADD bench $project_home/bench
 ADD Makefile.docker $project_home/Makefile
 
 # Install PMDK
