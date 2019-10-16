@@ -1,4 +1,4 @@
-all: src test
+all: src test bench
 
 src:
 	make -C src
@@ -6,8 +6,12 @@ src:
 test:
 	make -C test
 
-.PHONY: clean src test
+bench:
+	make -C bench
+
+.PHONY: clean src test bench
 
 clean:
 	make -C src clean
 	make -C test clean
+	make -C bench clean
