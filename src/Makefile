@@ -30,7 +30,7 @@ LIBS = -lpmemkv -pthread -lpmemobj
 STATIC_LIB = libpmkv.a
 EXAMPLE_STATIC_LIB = libpmkv_ex.a
 
-all: lib
+all: lib libpmemobj_example
 
 lib: $(STATIC_LIB) $(EXAMPLE_STATIC_LIB)
 
@@ -53,4 +53,4 @@ $(EXAMPLE_STATIC_LIB): pmemkv.o
 .PHONY: clean
 
 clean:
-	rm -f *.o $(STATIC_LIB) $(EXAMPLE_STATIC_LIB)
+	rm -f *.o $(STATIC_LIB) $(EXAMPLE_STATIC_LIB) libpmemobj_example
