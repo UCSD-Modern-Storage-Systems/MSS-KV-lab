@@ -76,5 +76,8 @@ RUN cd $project_home/lib && \git clone https://github.com/pmem/pmemkv && \
 # Set shared lib path
 ENV LD_LIBRARY_PATH=$project_home/lib/pmemkv/build
 
+# Make programs using PMDK assume the underlying storage is PMEM
+ENV PMEM_IS_PMEM_FORCE=1
+
 # Go to project home after login
 RUN echo "cd $project_home" >> ~/.bashrc
