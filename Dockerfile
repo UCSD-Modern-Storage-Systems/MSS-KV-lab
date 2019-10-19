@@ -21,6 +21,7 @@ RUN apt update && apt install -y \
 	vim
 
 RUN apt install -y ndctl
+RUN apt install -y valgrind
 
 # Create code structure
 RUN mkdir -p $project_home && cd $project_home && mkdir src && mkdir include && mkdir lib && mkdir test && mkdir bench
@@ -32,15 +33,17 @@ ADD test $project_home/test
 ADD bench $project_home/bench
 ADD Makefile.docker $project_home/Makefile
 
-# Install PMDK
+# Install PMDK (version: stable-1.7)
 RUN cd $project_home/lib && git clone https://github.com/pmem/pmdk && \
 	cd pmdk && \
+	git checkout --track origin/stable-1.7 && \
 	make -j$build_core && \
 	make install
 
-# Install libpmemobj-cpp
+# Install libpmemobj-cpp (version: stable-1.8)
 RUN cd $project_home/lib && git clone https://github.com/pmem/libpmemobj-cpp && \
 	cd libpmemobj-cpp && \
+	git checkout --track origin/stable-1.8 && \
 	mkdir build && \
 	cd build && \
 	cmake .. && \
@@ -61,9 +64,10 @@ RUN cd /usr/src/gtest && \
 	make -j$build_core && \
 	cp *.a /usr/lib
 
-# Build pmemkv
+# Build pmemkv (version: stable-1.0)
 RUN cd $project_home/lib && \git clone https://github.com/pmem/pmemkv && \
 	cd pmemkv && \
+	git checkout --track origin/stable-1.0 && \
 	mkdir build && \
 	cd build && \
 	cmake .. -DENGINE_CMAP=ON -DENGINE_STREE=ON -DENGINE_TREE3=ON && \
