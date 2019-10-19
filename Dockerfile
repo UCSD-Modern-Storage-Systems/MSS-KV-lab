@@ -18,10 +18,9 @@ RUN apt update && apt install -y \
 	rapidjson-dev \
 	git \
 	pkg-config \
-	vim
-
-RUN apt install -y ndctl
-RUN apt install -y valgrind
+	vim \
+	ndctl \
+	valgrind
 
 # Create code structure
 RUN mkdir -p $project_home && cd $project_home && mkdir src && mkdir include && mkdir lib && mkdir test && mkdir bench
