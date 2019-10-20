@@ -34,15 +34,12 @@ endif
 
 STATIC_LIB = libpmkv.a
 
-all: lib libpmemobj_example
+all: lib
 
 lib: $(STATIC_LIB)
 
 %.o: %.c
 	$(GCC) $(GCCFLAGS) $(INC_PATH) -c $< -o $@ $(LIB_PATH) $(LIBS)
-
-libpmemobj_example: libpmemobj_example.c
-	$(GCC) $(GCCFLAGS) $(INC_PATH) -o $@ $< $(LIB_PATH) $(LIBS)
 
 $(STATIC_LIB): $(PMKV_OBJ)
 	ar rsv $@ $<
@@ -50,4 +47,4 @@ $(STATIC_LIB): $(PMKV_OBJ)
 .PHONY: clean
 
 clean:
-	rm -f *.o $(STATIC_LIB) libpmemobj_example
+	rm -f *.o $(STATIC_LIB)

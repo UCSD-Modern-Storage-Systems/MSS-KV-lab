@@ -23,11 +23,18 @@ RUN apt update && apt install -y \
 	valgrind
 
 # Create code structure
-RUN mkdir -p $project_home && cd $project_home && mkdir src && mkdir include && mkdir lib && mkdir test && mkdir bench
+RUN mkdir -p $project_home && cd $project_home && \
+	mkdir lib && \
+	mkdir include && \
+	mkdir example && \
+	mkdir src && \
+	mkdir test && \
+	mkdir bench
 
 # Copy basic codes
-ADD src $project_home/src
 ADD include $project_home/include
+ADD example $project_home/example
+ADD src $project_home/src
 ADD test $project_home/test
 ADD bench $project_home/bench
 ADD Makefile.docker $project_home/Makefile
