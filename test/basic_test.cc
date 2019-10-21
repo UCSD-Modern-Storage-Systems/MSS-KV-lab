@@ -126,7 +126,7 @@ TEST_F(PMKVTest, SimpleTest)
 	EXPECT_NE(kv, nullptr);
 	std::size_t cnt = std::numeric_limits<std::size_t>::max();
 	ASSERT_TRUE(kv->count_all(cnt) == status::OK);
-	ASSERT_TRUE(cnt == 1);
+	ASSERT_TRUE(cnt == 0);
 	ASSERT_TRUE(status::NOT_FOUND == kv->exists("key1"));
 	std::string value;
 	ASSERT_TRUE(kv->get("key1", &value) == status::NOT_FOUND);
