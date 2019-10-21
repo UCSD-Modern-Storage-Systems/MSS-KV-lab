@@ -1,4 +1,6 @@
 #include "gtest/gtest.h"
+#include <thread>
+#include <vector>
 #include "libpmemkv.hpp"
 extern "C" {
 #include "pmkv.h"
@@ -8,6 +10,21 @@ const size_t SIZE = 1024ull * 1024ull * 512ull;
 const size_t LARGE_SIZE = 1024ull * 1024ull * 1024ull * 2ull;
 
 using namespace pmem::kv;
+
+template <typename Function>
+void parallel_exec(size_t threads_number, Function f)
+{
+	std::vector<std::thread> threads;
+	threads.reserve(threads_number);
+
+	for (size_t i = 0; i < threads_number; ++i) {
+		threads.emplace_back(f, i);
+	}
+
+	for (auto &t : threads) {
+		t.join();
+	}
+}
 
 // wrapper class to use most of pmemkv testcases
 class PMKVWrapper {
@@ -496,7 +513,6 @@ TEST_F(PMKVTest, RemoveNonexistentTest)
 	ASSERT_TRUE(status::OK == kv->exists("key1"));
 }
 
-/*
 TEST_F(PMKVTest, SimpleMultithreadedTest)
 {
 	size_t threads_number = 8;
@@ -523,7 +539,6 @@ TEST_F(PMKVTest, SimpleMultithreadedTest)
 	ASSERT_TRUE(kv->count_all(cnt) == status::OK);
 	ASSERT_TRUE(cnt == threads_number * thread_items);
 }
-*/
 
 
 int main(int argc, char **argv) {
