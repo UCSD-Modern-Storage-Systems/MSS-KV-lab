@@ -126,7 +126,7 @@ TEST_F(PMKVTest, SimpleTest)
 	EXPECT_NE(kv, nullptr);
 	std::size_t cnt = std::numeric_limits<std::size_t>::max();
 	ASSERT_TRUE(kv->count_all(cnt) == status::OK);
-	ASSERT_TRUE(cnt == 0);
+	ASSERT_TRUE(cnt == 1);
 	ASSERT_TRUE(status::NOT_FOUND == kv->exists("key1"));
 	std::string value;
 	ASSERT_TRUE(kv->get("key1", &value) == status::NOT_FOUND);
@@ -538,6 +538,86 @@ TEST_F(PMKVTest, SimpleMultithreadedTest)
 	std::size_t cnt = std::numeric_limits<std::size_t>::max();
 	ASSERT_TRUE(kv->count_all(cnt) == status::OK);
 	ASSERT_TRUE(cnt == threads_number * thread_items);
+}
+
+const int LARGE_LIMIT = 4000000;
+
+TEST_F(PMKVLargeTest, LargeAscendingTest)
+{
+	for (int i = 1; i <= LARGE_LIMIT; i++) {
+		std::string istr = std::to_string(i);
+		ASSERT_TRUE(kv->put(istr, (istr + "!")) == status::OK) << errormsg();
+		std::string value;
+		ASSERT_TRUE(kv->get(istr, &value) == status::OK && value == (istr + "!"));
+	}
+	for (int i = 1; i <= LARGE_LIMIT; i++) {
+		std::string istr = std::to_string(i);
+		std::string value;
+		ASSERT_TRUE(kv->get(istr, &value) == status::OK && value == (istr + "!"));
+	}
+	std::size_t cnt = std::numeric_limits<std::size_t>::max();
+	ASSERT_TRUE(kv->count_all(cnt) == status::OK);
+	ASSERT_TRUE(cnt == LARGE_LIMIT);
+}
+
+TEST_F(PMKVLargeTest, LargeAscendingAfterRecoveryTest)
+{
+	for (int i = 1; i <= LARGE_LIMIT; i++) {
+		std::string istr = std::to_string(i);
+		ASSERT_TRUE(kv->put(istr, (istr + "!")) == status::OK) << errormsg();
+		std::string value;
+		ASSERT_TRUE(kv->get(istr, &value) == status::OK && value == (istr + "!"));
+	}
+	Restart();
+	for (int i = 1; i <= LARGE_LIMIT; i++) {
+		std::string istr = std::to_string(i);
+		std::string value;
+		ASSERT_TRUE(kv->get(istr, &value) == status::OK && value == (istr + "!"));
+	}
+	std::size_t cnt = std::numeric_limits<std::size_t>::max();
+	ASSERT_TRUE(kv->count_all(cnt) == status::OK);
+	ASSERT_TRUE(cnt == LARGE_LIMIT);
+}
+
+TEST_F(PMKVLargeTest, LargeDescendingTest)
+{
+	for (int i = LARGE_LIMIT; i >= 1; i--) {
+		std::string istr = std::to_string(i);
+		ASSERT_TRUE(kv->put(istr, ("ABC" + istr)) == status::OK) << errormsg();
+		std::string value;
+		ASSERT_TRUE(kv->get(istr, &value) == status::OK &&
+			    value == ("ABC" + istr));
+	}
+	for (int i = LARGE_LIMIT; i >= 1; i--) {
+		std::string istr = std::to_string(i);
+		std::string value;
+		ASSERT_TRUE(kv->get(istr, &value) == status::OK &&
+			    value == ("ABC" + istr));
+	}
+	std::size_t cnt = std::numeric_limits<std::size_t>::max();
+	ASSERT_TRUE(kv->count_all(cnt) == status::OK);
+	ASSERT_TRUE(cnt == LARGE_LIMIT);
+}
+
+TEST_F(PMKVLargeTest, LargeDescendingAfterRecoveryTest)
+{
+	for (int i = LARGE_LIMIT; i >= 1; i--) {
+		std::string istr = std::to_string(i);
+		ASSERT_TRUE(kv->put(istr, ("ABC" + istr)) == status::OK) << errormsg();
+		std::string value;
+		ASSERT_TRUE(kv->get(istr, &value) == status::OK &&
+			    value == ("ABC" + istr));
+	}
+	Restart();
+	for (int i = LARGE_LIMIT; i >= 1; i--) {
+		std::string istr = std::to_string(i);
+		std::string value;
+		ASSERT_TRUE(kv->get(istr, &value) == status::OK &&
+			    value == ("ABC" + istr));
+	}
+	std::size_t cnt = std::numeric_limits<std::size_t>::max();
+	ASSERT_TRUE(kv->count_all(cnt) == status::OK);
+	ASSERT_TRUE(cnt == LARGE_LIMIT);
 }
 
 
