@@ -107,7 +107,23 @@ This will generate the `libpmkv.a` using the PMEMKV implementation. Since PMEMKV
 all the test cases in `test` directory.  You can also check how it performs in `bench` directory.
 
 ## Testing
-TBD
+Testing PMKV involves two steps.
+
+The first is `basic_test` that tests the functional correctness of your PMKV implementation.
+The largest test case creates 2 GB of pool and inserts and searches 4 million key-value pairs.
+`basic_test` currently consists of 24 test cases in total, but may be added with more test cases.
+
+To run the `basic_test`, do the following:
+```
+$ cd test
+$ make clean
+$ make basic_test
+$ ./basic_test
+```
+
+The second is `recovery_test` that tests the crash-consitency of your PMKV implementation.
+TBD.
+
 
 ## Measuring performance
 TBD
