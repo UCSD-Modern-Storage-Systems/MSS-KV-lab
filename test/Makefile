@@ -22,9 +22,10 @@ LIBS = -l:libpmkv.a -pthread -lgtest -lpmemkv
 all: basic_test
 
 %: %.cc
-	$(GPP) $(GPPFLAGS) $(INC_PATH) -o $@ $^ $(LIB_PATH) $(LIBS)
+	mkdir -p bin
+	$(GPP) $(GPPFLAGS) $(INC_PATH) -o bin/$@ $^ $(LIB_PATH) $(LIBS)
 
 .PHONY: clean
 
 clean:
-	rm -f basic_test
+	rm -rf bin
