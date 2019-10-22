@@ -179,4 +179,15 @@ Supported parameters
     readrandomwriterandom  (N threads doing random-read, random-write)
 ```
 
+## Submission
+You will turn in your submission in Gradescope. You have to submit all the source files that need to build your library (a.k.a. libpmkv.a) 
+If you need to add new source files other than pmkv.c, you might need to change the Makefile as well.  In such cases, don't forget to submit
+your modified Makefile along with the new source files.  If we cannot compile your code and produce the libpmkv.a, we cannot grade your PMKV.
 
+It will be auto-graded and you should have your grade and some feedback in a few minutes.
+
+You are allowed to submit as many times as you want until the deadline
+
+You should also submit a writeup about how you designed and implemented your PMKV at the end of the project.
+
+**All assignments will be announced via Piazza**. 
