@@ -20,11 +20,28 @@ void pmkv_close(pmkv *kv);
 int pmkv_get(pmkv *kv, const char *key, size_t key_size, char *out_val, size_t *out_val_size);
 int pmkv_put(pmkv *kv, const char *key, size_t key_size, const char *val, size_t val_size);
 int pmkv_delete(pmkv *kv, const char *key, size_t key_size);
-int pmkv_count_all(pmkv *kv, size_t *cnt);
+int pmkv_count_all(pmkv *kv, size_t *out_cnt);
 int pmkv_exists(pmkv *kv, const char *key, size_t key_size);
 ```
 
-TBD
+`pmkv_open` should create a pool at `path` with the size `pool_size`. When `recover` is 0,
+it should create a new pool. When `recover` is 1, it should start from an existing pool
+at `path`. Specifying `recover` to 1 means the recovery of your PMKV.
+
+`pmkv_get` searches a value using a key specified by `key` and `key_size`. `key` indicates
+the start memory address where your key resides and `key_size` indicates the byte size of the key.
+`out_val` and `out_val_size` returns the pointer to the value and the byte size of the value, respectively.
+On success, `pmkv_get` should return 0. Otherwise, return 1.
+
+`pmkv_put` inserts or updates a new key-value pair. Specifying key and value is similar to `pmkv_get`.
+On success, `pmkv_put` should return 0. Otherwise, return 1.
+
+`pmkv_delete` deletes an entry specified the key. On success, it should return 0. Otherwise, return 1.
+
+`pmkv_count_all` counts the number of all entires in your PMKV. `out_cnt` returns the pointer
+to the count value. On success, it should return 0. Otherwise, return 1.
+
+`pmkv_exists` checks if a give key-value pair exists. Return 1 if exists, 0 otherwise.
 
 Once your implementation of PMKV is completed, it will be evaluated in three categories:
 
