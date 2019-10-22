@@ -59,7 +59,7 @@ public:
 	}
 
 	status remove(string_view key) {
-		int s = pmkv_del(_kv, key.data(), key.size());
+		int s = pmkv_delete(_kv, key.data(), key.size());
 		if (s)
 			return status::NOT_FOUND;
 		return status::OK;
