@@ -87,14 +87,21 @@ First, build the docker image by doing the following:
 ```
 $ make image
 ``` 
-This may take for a while (~20 minutes).  If you have many cores in your machine and want to speed up the build,
-you can change the value of `build_core` in the `image` recipe in the Makefile.  The default is using 8 cores.
 
 Once the image is built, you can run it by doing the following:
 ```
 $ make run
 ```
 This will place you in the home directory of your project in the Docker container.
+
+## Installing prerequisites 
+At the home of the Docker container `/home/cse291a`, clone the project repository once again.  To install the prerequisites (PMDK, PMEMKV, etc), do the following:
+```
+$ ./setup.sh
+```
+
+This may take for a while.  If you have many cores in your machine and want to speed up the build,
+you can change the value of `build_core` in the `setup.sh` script.  The default is using 8 cores.
 
 ## PMDK examples
 To help you better understand PMDK (and libpmemobj in particular), we provide example codes in `example` directory.
