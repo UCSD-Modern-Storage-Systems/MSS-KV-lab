@@ -42,16 +42,16 @@ int pmkv_put(pmkv *kv, const char *key, size_t key_size, const char *val, size_t
 	return pmemkv_put(db, key, key_size, val, val_size);
 }
 
-int pmkv_del(pmkv *kv, const char *key, size_t key_size)
+int pmkv_delete(pmkv *kv, const char *key, size_t key_size)
 {
 	pmemkv_db *db = (pmemkv_db*)kv;
 	return pmemkv_remove(db, key, key_size);
 }
 
-int pmkv_count_all(pmkv *kv, size_t *cnt)
+int pmkv_count_all(pmkv *kv, size_t *out_cnt)
 {
 	pmemkv_db *db = (pmemkv_db*)kv;
-	return pmemkv_count_all(db, cnt);
+	return pmemkv_count_all(db, out_cnt);
 }
 
 int pmkv_exists(pmkv *kv, const char *key, size_t key_size)
