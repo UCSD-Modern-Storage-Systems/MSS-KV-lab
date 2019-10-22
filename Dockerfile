@@ -85,5 +85,11 @@ ENV LD_LIBRARY_PATH=$project_home/lib/pmemkv/build
 # Make programs using PMDK assume the underlying storage is PMEM
 ENV PMEM_IS_PMEM_FORCE=1
 
+# Create /mnt/ramdisk
+RUN mkdir -p /mnt/ramdisk && chmod -R 777 /mnt/ramdisk
+
 # Go to project home after login
 RUN echo "cd $project_home" >> ~/.bashrc
+
+# Clean all binaries
+RUN cd $project_home && make clean
