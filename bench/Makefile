@@ -1,5 +1,5 @@
 GPP = g++
-GPPFLAGS = -O3 -std=c++11 -w -DOS_LINUX -fno-builtin-memcmp -march=native -DNDEBUG
+GPPFLAGS = -O3 -std=c++11 -w -DOS_LINUX -fno-builtin-memcmp -march=native
 
 # pmemkv
 PMEMKV_INC = ../lib/pmemkv/src
@@ -14,10 +14,11 @@ LIB_DIR = ../src $(PMEMKV_LIB)
 LIB_PATH = $(foreach d, $(LIB_DIR), -L$d)
 LIBS = -l:libpmkv.a -ldl -pthread -lpmemkv
 
-pmkv_bench:
-	g++ $(GPPFLAGS) ./db_bench.cc ./port/port_posix.cc ./util/env.cc ./util/env_posix.cc ./util/histogram.cc ./util/logging.cc ./util/status.cc ./util/testutil.cc -o $@ $(INC_PATH) $(LIB_PATH) $(LIBS)
+bench:
+	mkdir -p bin
+	g++ $(GPPFLAGS) ./bench.cc ./port/port_posix.cc ./util/env.cc ./util/env_posix.cc ./util/histogram.cc ./util/logging.cc ./util/status.cc ./util/testutil.cc -o bin/$@ $(INC_PATH) $(LIB_PATH) $(LIBS)
 
-.PHONY: pmkv_bench clean
+.PHONY: clean
 
 clean:
-	rm -f pmkv_bench
+	rm -rf bin
