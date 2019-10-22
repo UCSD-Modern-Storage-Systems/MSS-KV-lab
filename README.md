@@ -139,11 +139,11 @@ $ ./bin/basic_test
 ```
 
 The second is `recovery_test` that tests the crash-consitency of your PMKV implementation.
-It is still under development. We will provide the recovery test script sometime soon.
+It is still under development. You will be notified once it's ready.
 
 ## Measuring performance
 Once you make sure that your PMKV implementation becomes stable enough (e.g. after passing the testing above),
-You can measure its performance under `bench` directory.  We adopted the benchmark from [pmemkv-tools](https://github.com/pmem/pmemkv-tools),
+you can measure its performance under `bench` directory.  We adopted the benchmark from [pmemkv-tools](https://github.com/pmem/pmemkv-tools),
 which contains additional tools and benchmarks for testing PMEMKV.  Running the benchmark is similar, but you
 don't need to specify `--engine` parameter since the default is your PMKV.
 
@@ -180,13 +180,13 @@ Supported parameters
 ```
 
 ## Submission
-You will turn in your submission in Gradescope. You have to submit all the source files that need to build your library (a.k.a. libpmkv.a) 
+You will turn in your submission in Gradescope. You have to submit all the source files that need to build your library (a.k.a. libpmkv.a).
 If you need to add new source files other than pmkv.c, you might need to change the Makefile as well.  In such cases, don't forget to submit
 your modified Makefile along with the new source files.  If we cannot compile your code and produce the libpmkv.a, we cannot grade your PMKV.
 
 It will be auto-graded and you should have your grade and some feedback in a few minutes.
 
-You are allowed to submit as many times as you want until the deadline
+You are allowed to submit as many times as you want until the deadline.
 
 You should also submit a writeup about how you designed and implemented your PMKV at the end of the project.
 
