@@ -134,13 +134,49 @@ To run the `basic_test`, do the following:
 ```
 $ cd test
 $ make clean
-$ make basic_test
-$ ./basic_test
+$ make
+$ ./bin/basic_test
 ```
 
 The second is `recovery_test` that tests the crash-consitency of your PMKV implementation.
-TBD.
-
+It is still under development. We will provide the recovery test script sometime soon.
 
 ## Measuring performance
-TBD
+Once you make sure that your PMKV implementation becomes stable enough (e.g. after passing the testing above),
+You can measure its performance under `bench` directory.  We adopted the benchmark from [pmemkv-tools](https://github.com/pmem/pmemkv-tools),
+which contains additional tools and benchmarks for testing PMEMKV.  Running the benchmark is similar, but you
+don't need to specify `--engine` parameter since the default is your PMKV.
+
+To run the benchmark, do the following:
+```
+$ cd bench
+$ make clean
+$ make
+$ ./bin/bench --db=<path_to_your_pmkv> --db_size_in_gb=<integer> ...
+```
+
+Supported parameters
+```
+--db=<location>            (path to persistent pool, default: /dev/shm/pmemkv)
+                           (note: file on DAX filesystem, DAX device, or poolset file)
+--db_size_in_gb=<integer>  (size of persistent pool to create in GB, default: 0)
+                           (note: always use 0 with poolset or device DAX configs)
+--histogram=<0|1>          (show histograms when reporting latencies)
+--num=<integer>            (number of keys to place in database, default: 1000000)
+--reads=<integer>          (number of read operations, default: 1000000)
+--threads=<integer>        (number of concurrent threads, default: 1)
+--value_size=<integer>     (size of values in bytes, default: 100)
+--benchmarks=<name>,       (comma-separated list of benchmarks to run)
+    fillseq                (load N values in sequential key order)
+    fillrandom             (load N values in random key order)
+    overwrite              (replace N values in random key order)
+    readseq                (read N values in sequential key order)
+    readrandom             (read N values in random key order)
+    readmissing            (read N missing values in random key order)
+    deleteseq              (delete N values in sequential key order)
+    deleterandom           (delete N values in random key order)
+    readwhilewriting       (1 writer, N threads doing random reads)
+    readrandomwriterandom  (N threads doing random-read, random-write)
+```
+
+
