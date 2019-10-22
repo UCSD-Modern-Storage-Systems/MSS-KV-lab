@@ -13,6 +13,7 @@ POBJ_LAYOUT_TOID(linkedlist, struct list_elem);
 POBJ_LAYOUT_END(linkedlist);
 
 struct list_head {
+	PMEMmutex lock;
 	int num_elements;
 	TOID(struct list_elem) head;
 	TOID(struct list_elem) tail;
@@ -61,6 +62,9 @@ int main(int argc, char **argv)
 	* Append a new node to the linked list
 	***********************************************/
 
+	// lock the root object
+	pmemobj_mutex_lock(pop, &D_RW(root)->lock);
+
 	TX_BEGIN(pop) {
 
 		// get tail
@@ -103,6 +107,9 @@ int main(int argc, char **argv)
 	} TX_FINALLY {
 		// execute this anyway
 	} TX_END
+
+	// unlock the root object
+	pmemobj_mutex_unlock(pop, &D_RW(root)->lock);
 
 	// scan all elements in the list
 	TOID(struct list_elem) tmp = D_RO(root)->head;
