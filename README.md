@@ -88,20 +88,27 @@ First, build the docker image by doing the following:
 $ make image
 ``` 
 
-Once the image is built, you can run it by doing the following:
+Once the image is built, you can run the docker container out of the image by doing the following:
 ```
 $ make run
 ```
 This will place you in the home directory of your project in the Docker container.
 
+By default, we use `/mnt/ramdisk` directory in your host machine as the mount point `/mnt/ramdisk` in the container.
+This means that the changes made in `/mnt/ramdisk` in the container are made permanent in `/mnt/ramdisk` in your host machine.
+Make sure that you have `/mnt/ramdisk` directory in your host machine.
+If you want to use another directory, you can freely change it (`mnt` variable) in the Makefile.
+
 ## Installing prerequisites 
-At the home of the Docker container `/home/cse291a`, clone the project repository once again.  To install the prerequisites (PMDK, PMEMKV, etc), do the following:
+The project repository you cloned in your hose machine will be mounted at `/home/cse291a` of the Docker container.  To install the prerequisites (PMDK, PMEMKV, etc), do the following:
 ```
 $ ./setup.sh
 ```
 
 This may take for a while.  If you have many cores in your machine and want to speed up the build,
 you can change the value of `build_core` in the `setup.sh` script.  The default is using 8 cores.
+
+This will create `lib` directory and install all libraries you would need for the project in that directory.
 
 ## PMDK examples
 To help you better understand PMDK (and libpmemobj in particular), we provide example codes in `example` directory.
