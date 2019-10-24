@@ -1,9 +1,11 @@
 GPP = g++
 GPPFLAGS = -O3 -std=c++11 -w -DOS_LINUX -fno-builtin-memcmp -march=native
 
+LIB_HOME = ../../lib
+
 # pmemkv
-PMEMKV_INC = ../lib/pmemkv/src
-PMEMKV_LIB = ../lib/pmemkv/build
+PMEMKV_INC = $(LIB_HOME)/pmemkv/src
+PMEMKV_LIB = $(LIB_HOME)/pmemkv/build
 
 # include
 INC_DIR = ../include ./include ./ ./util $(PMEMKV_INC)

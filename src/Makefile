@@ -5,13 +5,15 @@ ifeq ($(DEBUG), 1)
 GCCFLAGS = -g -O0
 endif
 
+LIB_HOME = ../../lib
+
 # pmemkv
-PMEMKV_HOME = ../lib/pmemkv
+PMEMKV_HOME = $(LIB_HOME)/pmemkv
 PMEMKV_INC = $(PMEMKV_HOME)/src
 PMEMKV_LIB = $(PMEMKV_HOME)/build
 
 # PMDK
-PMDK_HOME = ../lib/pmdk
+PMDK_HOME = $(LIB_HOME)/pmdk
 PMDK_INC = $(PMDK_HOME)/src/include
 ifeq ($(DEBUG), 1)
 PMDK_LIB = $(PMDK_HOME)/src/debug
