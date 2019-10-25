@@ -155,8 +155,10 @@ To run the benchmark, do the following:
 $ cd bench
 $ make clean
 $ make
-$ ./bin/bench --db=<path_to_your_pmkv> --db_size_in_gb=<integer> ...
+$ ./bin/bench --db=<path_to_your_pool_file> --db_size_in_gb=<integer> ...
 ```
+
+By default, the db path is `/mnt/ramdisk/bench` and the db size is 1GB.
 
 Supported parameters
 ```

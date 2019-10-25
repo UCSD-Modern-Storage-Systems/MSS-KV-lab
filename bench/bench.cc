@@ -31,9 +31,9 @@ extern "C" {
 static const std::string USAGE =
         "pmkv_bench\n"
         "--engine=<name>            (storage engine name, default: pmkv)\n"
-        "--db=<location>            (path to persistent pool, default: /dev/shm/pmemkv)\n"
+        "--db=<location>            (path to persistent pool, default: /mnt/ramdisk/bench)\n"
         "                           (note: file on DAX filesystem, DAX device, or poolset file)\n"
-        "--db_size_in_gb=<integer>  (size of persistent pool to create in GB, default: 0)\n"
+        "--db_size_in_gb=<integer>  (size of persistent pool to create in GB, default: 1)\n"
         "                           (note: always use 0 with existing poolset or device DAX configs)\n"
         "                           (note: when pool path is non-existing, value should be > 0)\n"
         "--histogram=<0|1>          (show histograms when reporting latencies)\n"
@@ -83,10 +83,10 @@ static int FLAGS_value_size = 100;
 static bool FLAGS_histogram = false;
 
 // Use the db with the following name.
-static const char *FLAGS_db = "/dev/shm/pmemkv";
+static const char *FLAGS_db = "/mnt/ramdisk/bench";
 
 // Use following size when opening the database.
-static int FLAGS_db_size_in_gb = 0;
+static int FLAGS_db_size_in_gb = 1;
 
 static const double FLAGS_compression_ratio = 1.0;
 
