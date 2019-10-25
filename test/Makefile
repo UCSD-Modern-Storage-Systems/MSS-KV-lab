@@ -27,6 +27,11 @@ all: basic_test
 	mkdir -p bin
 	$(GPP) $(GPPFLAGS) $(INC_PATH) -o bin/$@ $^ $(LIB_PATH) $(LIBS)
 
+run:
+	make clean
+	make
+	./bin/basic_test
+
 .PHONY: clean
 
 clean:
