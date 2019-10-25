@@ -96,10 +96,8 @@ $ make run
 ```
 This will place you in the home directory of your project in the Docker container.
 
-By default, we use `/mnt/ramdisk` directory in your host machine as the mount point `/mnt/ramdisk` in the container.
-This means that the changes made in `/mnt/ramdisk` in the container are made permanent in `/mnt/ramdisk` in your host machine.
-Make sure that you have `/mnt/ramdisk` directory in your host machine.
-If you want to use another directory, you can freely change it (`mnt` variable) in the Makefile.
+By default, we use `/mnt/ramdisk` directory as the mount point in the container.  This is mounted using the `data` directory
+in your project repository on the host machine.  The files that our test script and benchmark use will use this directory.
 
 ## PMDK examples
 To help you better understand PMDK (and libpmemobj in particular), we provide example codes in `example` directory.
