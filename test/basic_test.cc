@@ -540,7 +540,7 @@ TEST_F(PMKVTest, SimpleMultithreadedTest)
 	ASSERT_TRUE(cnt == threads_number * thread_items);
 }
 
-const int LARGE_LIMIT = 4000000;
+const int LARGE_LIMIT = 1000000;
 
 TEST_F(PMKVLargeTest, LargeAscendingTest)
 {
