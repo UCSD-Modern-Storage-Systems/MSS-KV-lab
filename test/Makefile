@@ -21,7 +21,7 @@ LIB_DIR = ../src $(GTEST_LIB) $(PMEMKV_LIB)
 LIB_PATH = $(foreach d, $(LIB_DIR), -L$d)
 LIBS = -l:libpmkv.a -pthread -lgtest -lpmemkv
 
-all: basic_test
+all: basic_test recovery_test
 
 %: %.cc
 	mkdir -p bin

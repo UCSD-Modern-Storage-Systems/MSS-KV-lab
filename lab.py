@@ -3,7 +3,35 @@
 # executes in the cloud.
  
 lab_name = "PMKV"
-output_files = []
+output_files = [
+	'PMKVTest.BasicTest',
+	'PMKVTest.SimpleTest',
+	'PMKVTest.BinaryKeyTest',
+	'PMKVTest.BinaryValueTest',
+	'PMKVTest.EmptyKeyTest',
+	'PMKVTest.EmptyValueTest',
+	'PMKVTest.GetClearExternalValueTest',
+	'PMKVTest.GetHeadlessTest',
+	'PMKVTest.GetMultipleTest',
+	'PMKVTest.GetMultiple2Test',
+	'PMKVTest.GetNonexistentTest',
+	'PMKVTest.PutTest',
+	'PMKVTest.PutKeysOfDifferentSizesTest',
+	'PMKVTest.PutValuesOfDifferentSizesTest',
+	'PMKVTest.RemoveAllTest',
+	'PMKVTest.RemoveAndInsertTest',
+	'PMKVTest.RemoveExistingTest',
+	'PMKVTest.RemoveHeadlessTest',
+	'PMKVTest.RemoveNonexistentTest',
+	'PMKVTest.SimpleMultithreadedTest',
+	'PMKVLargeTest.LargeAscendingTest',
+	'PMKVLargeTest.LargeAscendingAfterRecoveryTest',
+	'PMKVLargeTest.LargeDescendingTest',
+	'PMKVLargeTest.LargeDescendingAfterRecoveryTest',
+        'PMKVRecoveryTest.FillSeqRecoveryTest',
+        'PMKVRecoveryTest.OverwriteSeqRecoveryTest',
+        'PMKVRecoveryTest.DeleteSeqRecoveryTest',
+]
 input_files = ['src/pmkv.c']
 run_cmd = ['make', 'test_all']
 clean_cmd = ['make', 'clean']
