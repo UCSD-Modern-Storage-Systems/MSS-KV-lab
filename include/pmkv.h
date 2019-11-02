@@ -5,7 +5,7 @@
 extern "C" {
 #endif
 
-#define MAX_VAL_LEN 64
+#define MAX_VAL_LEN 1048576
 
 typedef struct {} pmkv;
 

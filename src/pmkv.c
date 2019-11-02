@@ -4,8 +4,6 @@
 #include <stdlib.h>
 #include "pmkv.h"
 
-#define MAX_VAL_LEN 64
-
 pmkv* pmkv_open(const char *path, size_t pool_size, int force_create)
 {
 	// TODO: implement this
