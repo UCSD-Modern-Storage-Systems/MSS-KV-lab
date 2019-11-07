@@ -27,10 +27,13 @@ all: basic_test recovery_test
 	mkdir -p bin
 	$(GPP) $(GPPFLAGS) $(INC_PATH) -o bin/$@ $^ $(LIB_PATH) $(LIBS)
 
+.IGNORE: run
 run:
 	make clean
 	make
-	./bin/basic_test
+	./bin/basic_test --gtest_output=xml:basic_test.xml
+	./bin/recovery_test --gtest_output=xml:recovery_test.xml
+	python parse_result.py basic_test.xml recovery_test.xml
 
 .PHONY: clean
 

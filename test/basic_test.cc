@@ -32,13 +32,15 @@ public:
 	PMKVWrapper(std::string path, size_t size, bool create)
 	{
 		_kv = pmkv_open(path.c_str(), size, create ? 1 : 0);
-		if (_kv == NULL)
-			throw std::runtime_error("Failed to open kv file");
 	}
 
 	~PMKVWrapper()
 	{
 		pmkv_close(_kv);
+	}
+
+	bool is_db_valid() {
+		return _kv != NULL;
 	}
 
 	status get(string_view key, std::string *value) {
@@ -52,24 +54,15 @@ public:
 	}
 
 	status put(string_view key, string_view value) {
-		int s = pmkv_put(_kv, key.data(), key.size(), value.data(), value.size());
-		if (s)
-			throw std::runtime_error("Failed to put with an undefined error");
-		return status::OK;
+		return (status)pmkv_put(_kv, key.data(), key.size(), value.data(), value.size());
 	}
 
 	status remove(string_view key) {
-		int s = pmkv_delete(_kv, key.data(), key.size());
-		if (s)
-			return status::NOT_FOUND;
-		return status::OK;
+		return (status)pmkv_delete(_kv, key.data(), key.size());
 	}
 
 	status count_all(std::size_t &cnt) {
-		int s = pmkv_count_all(_kv, &cnt);
-		if (s)
-			throw std::runtime_error("Failed to count all with an undefined error");
-		return status::OK;
+		return (status)pmkv_count_all(_kv, &cnt);
 	}
 
 	status exists(string_view key) {
@@ -115,7 +108,7 @@ using PMKVTest = PMKVBaseTest<SIZE>;
 using PMKVLargeTest = PMKVBaseTest<LARGE_SIZE>;
 
 TEST_F(PMKVTest, BasicTest) {
-	EXPECT_NE(kv, nullptr);
+	ASSERT_TRUE(kv->is_db_valid());
 	kv->put("key1", "value1");
 	std::string value;
 	ASSERT_TRUE(kv->get("key1", &value) == status::OK && value == "value1");
@@ -123,7 +116,7 @@ TEST_F(PMKVTest, BasicTest) {
 
 TEST_F(PMKVTest, SimpleTest)
 {
-	EXPECT_NE(kv, nullptr);
+	ASSERT_TRUE(kv->is_db_valid());
 	std::size_t cnt = std::numeric_limits<std::size_t>::max();
 	ASSERT_TRUE(kv->count_all(cnt) == status::OK);
 	ASSERT_TRUE(cnt == 0);
@@ -143,6 +136,7 @@ TEST_F(PMKVTest, SimpleTest)
 
 TEST_F(PMKVTest, BinaryKeyTest)
 {
+	ASSERT_TRUE(kv->is_db_valid());
 	std::size_t cnt = std::numeric_limits<std::size_t>::max();
 	ASSERT_TRUE(kv->count_all(cnt) == status::OK);
 	ASSERT_TRUE(cnt == 0);
@@ -179,6 +173,7 @@ TEST_F(PMKVTest, BinaryKeyTest)
 
 TEST_F(PMKVTest, BinaryValueTest)
 {
+	ASSERT_TRUE(kv->is_db_valid());
 	std::string value("A\0B\0\0C", 6);
 	ASSERT_TRUE(kv->put("key1", value) == status::OK) << errormsg();
 	std::string value_out;
@@ -188,6 +183,7 @@ TEST_F(PMKVTest, BinaryValueTest)
 
 TEST_F(PMKVTest, EmptyKeyTest)
 {
+	ASSERT_TRUE(kv->is_db_valid());
 	std::size_t cnt = std::numeric_limits<std::size_t>::max();
 	ASSERT_TRUE(kv->count_all(cnt) == status::OK);
 	ASSERT_TRUE(cnt == 0);
@@ -216,6 +212,7 @@ TEST_F(PMKVTest, EmptyKeyTest)
 
 TEST_F(PMKVTest, EmptyValueTest)
 {
+	ASSERT_TRUE(kv->is_db_valid());
 	std::size_t cnt = std::numeric_limits<std::size_t>::max();
 	ASSERT_TRUE(kv->count_all(cnt) == status::OK);
 	ASSERT_TRUE(cnt == 0);
@@ -241,6 +238,7 @@ TEST_F(PMKVTest, EmptyValueTest)
 
 TEST_F(PMKVTest, GetClearExternalValueTest)
 {
+	ASSERT_TRUE(kv->is_db_valid());
 	ASSERT_TRUE(kv->put("key1", "cool") == status::OK) << errormsg();
 	std::string value = "super";
 	ASSERT_TRUE(kv->get("key1", &value) == status::OK && value == "cool");
@@ -252,6 +250,7 @@ TEST_F(PMKVTest, GetClearExternalValueTest)
 
 TEST_F(PMKVTest, GetHeadlessTest)
 {
+	ASSERT_TRUE(kv->is_db_valid());
 	ASSERT_TRUE(status::NOT_FOUND == kv->exists("waldo"));
 	std::string value;
 	ASSERT_TRUE(kv->get("waldo", &value) == status::NOT_FOUND);
@@ -259,6 +258,7 @@ TEST_F(PMKVTest, GetHeadlessTest)
 
 TEST_F(PMKVTest, GetMultipleTest)
 {
+	ASSERT_TRUE(kv->is_db_valid());
 	ASSERT_TRUE(kv->put("abc", "A1") == status::OK) << errormsg();
 	ASSERT_TRUE(kv->put("def", "B2") == status::OK) << errormsg();
 	ASSERT_TRUE(kv->put("hij", "C3") == status::OK) << errormsg();
@@ -286,6 +286,7 @@ TEST_F(PMKVTest, GetMultipleTest)
 
 TEST_F(PMKVTest, GetMultiple2Test)
 {
+	ASSERT_TRUE(kv->is_db_valid());
 	ASSERT_TRUE(kv->put("key1", "value1") == status::OK) << errormsg();
 	ASSERT_TRUE(kv->put("key2", "value2") == status::OK) << errormsg();
 	ASSERT_TRUE(kv->put("key3", "value3") == status::OK) << errormsg();
@@ -304,6 +305,7 @@ TEST_F(PMKVTest, GetMultiple2Test)
 
 TEST_F(PMKVTest, GetNonexistentTest)
 {
+	ASSERT_TRUE(kv->is_db_valid());
 	ASSERT_TRUE(kv->put("key1", "value1") == status::OK) << errormsg();
 	ASSERT_TRUE(status::NOT_FOUND == kv->exists("waldo"));
 	std::string value;
@@ -312,6 +314,7 @@ TEST_F(PMKVTest, GetNonexistentTest)
 
 TEST_F(PMKVTest, PutTest)
 {
+	ASSERT_TRUE(kv->is_db_valid());
 	std::size_t cnt = std::numeric_limits<std::size_t>::max();
 	ASSERT_TRUE(kv->count_all(cnt) == status::OK);
 	ASSERT_TRUE(cnt == 0);
@@ -349,6 +352,7 @@ TEST_F(PMKVTest, PutTest)
 
 TEST_F(PMKVTest, PutKeysOfDifferentSizesTest)
 {
+	ASSERT_TRUE(kv->is_db_valid());
 	std::string value;
 	ASSERT_TRUE(kv->put("123456789ABCDE", "A") == status::OK) << errormsg();
 	std::size_t cnt = std::numeric_limits<std::size_t>::max();
@@ -388,6 +392,7 @@ TEST_F(PMKVTest, PutKeysOfDifferentSizesTest)
 
 TEST_F(PMKVTest, PutValuesOfDifferentSizesTest)
 {
+	ASSERT_TRUE(kv->is_db_valid());
 	std::string value;
 	ASSERT_TRUE(kv->put("A", "123456789ABCDE") == status::OK) << errormsg();
 	std::size_t cnt = std::numeric_limits<std::size_t>::max();
@@ -427,6 +432,7 @@ TEST_F(PMKVTest, PutValuesOfDifferentSizesTest)
 
 TEST_F(PMKVTest, RemoveAllTest)
 {
+	ASSERT_TRUE(kv->is_db_valid());
 	std::size_t cnt = std::numeric_limits<std::size_t>::max();
 	ASSERT_TRUE(kv->count_all(cnt) == status::OK);
 	ASSERT_TRUE(cnt == 0);
@@ -445,6 +451,7 @@ TEST_F(PMKVTest, RemoveAllTest)
 
 TEST_F(PMKVTest, RemoveAndInsertTest)
 {
+	ASSERT_TRUE(kv->is_db_valid());
 	std::size_t cnt = std::numeric_limits<std::size_t>::max();
 	ASSERT_TRUE(kv->count_all(cnt) == status::OK);
 	ASSERT_TRUE(cnt == 0);
@@ -475,6 +482,7 @@ TEST_F(PMKVTest, RemoveAndInsertTest)
 
 TEST_F(PMKVTest, RemoveExistingTest)
 {
+	ASSERT_TRUE(kv->is_db_valid());
 	std::size_t cnt = std::numeric_limits<std::size_t>::max();
 	ASSERT_TRUE(kv->count_all(cnt) == status::OK);
 	ASSERT_TRUE(cnt == 0);
@@ -503,11 +511,13 @@ TEST_F(PMKVTest, RemoveExistingTest)
 
 TEST_F(PMKVTest, RemoveHeadlessTest)
 {
+	ASSERT_TRUE(kv->is_db_valid());
 	ASSERT_TRUE(kv->remove("nada") == status::NOT_FOUND);
 }
 
 TEST_F(PMKVTest, RemoveNonexistentTest)
 {
+	ASSERT_TRUE(kv->is_db_valid());
 	ASSERT_TRUE(kv->put("key1", "value1") == status::OK) << errormsg();
 	ASSERT_TRUE(kv->remove("nada") == status::NOT_FOUND);
 	ASSERT_TRUE(status::OK == kv->exists("key1"));
@@ -515,6 +525,7 @@ TEST_F(PMKVTest, RemoveNonexistentTest)
 
 TEST_F(PMKVTest, SimpleMultithreadedTest)
 {
+	ASSERT_TRUE(kv->is_db_valid());
 	size_t threads_number = 8;
 	size_t thread_items = 50;
 	parallel_exec(threads_number, [&](size_t thread_id) {
@@ -544,6 +555,7 @@ const int LARGE_LIMIT = 1000000;
 
 TEST_F(PMKVLargeTest, LargeAscendingTest)
 {
+	ASSERT_TRUE(kv->is_db_valid());
 	for (int i = 1; i <= LARGE_LIMIT; i++) {
 		std::string istr = std::to_string(i);
 		ASSERT_TRUE(kv->put(istr, (istr + "!")) == status::OK) << errormsg();
@@ -562,6 +574,7 @@ TEST_F(PMKVLargeTest, LargeAscendingTest)
 
 TEST_F(PMKVLargeTest, LargeAscendingAfterRecoveryTest)
 {
+	ASSERT_TRUE(kv->is_db_valid());
 	for (int i = 1; i <= LARGE_LIMIT; i++) {
 		std::string istr = std::to_string(i);
 		ASSERT_TRUE(kv->put(istr, (istr + "!")) == status::OK) << errormsg();
@@ -581,6 +594,7 @@ TEST_F(PMKVLargeTest, LargeAscendingAfterRecoveryTest)
 
 TEST_F(PMKVLargeTest, LargeDescendingTest)
 {
+	ASSERT_TRUE(kv->is_db_valid());
 	for (int i = LARGE_LIMIT; i >= 1; i--) {
 		std::string istr = std::to_string(i);
 		ASSERT_TRUE(kv->put(istr, ("ABC" + istr)) == status::OK) << errormsg();
@@ -601,6 +615,7 @@ TEST_F(PMKVLargeTest, LargeDescendingTest)
 
 TEST_F(PMKVLargeTest, LargeDescendingAfterRecoveryTest)
 {
+	ASSERT_TRUE(kv->is_db_valid());
 	for (int i = LARGE_LIMIT; i >= 1; i--) {
 		std::string istr = std::to_string(i);
 		ASSERT_TRUE(kv->put(istr, ("ABC" + istr)) == status::OK) << errormsg();
@@ -619,7 +634,6 @@ TEST_F(PMKVLargeTest, LargeDescendingAfterRecoveryTest)
 	ASSERT_TRUE(kv->count_all(cnt) == status::OK);
 	ASSERT_TRUE(cnt == LARGE_LIMIT);
 }
-
 
 int main(int argc, char **argv) {
 	::testing::InitGoogleTest(&argc, argv);

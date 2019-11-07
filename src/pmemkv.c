@@ -19,8 +19,8 @@ pmkv* pmkv_open(const char *path, size_t pool_size, int force_create)
 
 	pmemkv_db *db = NULL;
 	s = pmemkv_open("cmap", cfg, &db);
-	assert(s == PMEMKV_STATUS_OK);
-	assert(db != NULL);
+	if (s != PMEMKV_STATUS_OK)
+		db = NULL;
 
 	return (pmkv*)db;
 }
