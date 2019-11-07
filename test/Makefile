@@ -19,7 +19,7 @@ INC_PATH = $(foreach d, $(INC_DIR), -I$d)
 # library
 LIB_DIR = ../src $(GTEST_LIB) $(PMEMKV_LIB)
 LIB_PATH = $(foreach d, $(LIB_DIR), -L$d)
-LIBS = -l:libpmkv.a -pthread -lgtest -lpmemkv
+LIBS = -l:libpmkv.a -pthread -lgtest -lpmemkv -lpmemobj
 
 all: basic_test recovery_test
 
