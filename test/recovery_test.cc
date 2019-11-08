@@ -88,6 +88,7 @@ public:
 
 	void Cleanup()
 	{
+		delete kv;
 		std::remove(PATH.c_str());
 		Start(true);
 	}

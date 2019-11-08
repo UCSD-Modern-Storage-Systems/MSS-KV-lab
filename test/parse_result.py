@@ -34,6 +34,8 @@ recovery_test_spec = [
         'PMKVRecoveryTest.DeleteSeqRecoveryTest',
 ]
 
+test_result_home = '../'
+
 
 def parse_test_result(xml, test_spec):
     ret = {}
@@ -57,7 +59,7 @@ def parse_test_result(xml, test_spec):
         result = ret.get(test_name)
         if not result:
             result = (False, 'Error: output file couldn\'t be produced')
-        with open(test_name, 'w') as f:
+        with open(test_result_home + test_name, 'w') as f:
             f.write(result[1])
 
 
