@@ -31,9 +31,8 @@ all: basic_test recovery_test
 run:
 	make clean
 	make
-	./bin/basic_test --gtest_output=xml:basic_test.xml
-	./bin/recovery_test --gtest_output=xml:recovery_test.xml
-	python parse_result.py basic_test.xml recovery_test.xml
+	./run_all.sh
+	python parse_result.py xml
 
 .PHONY: clean
 

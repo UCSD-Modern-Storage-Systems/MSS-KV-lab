@@ -1,7 +1,7 @@
 import os, sys
 import xml.etree.ElementTree as ET
 
-basic_test_spec = [
+spec = [
         'PMKVTest.BasicTest',
         'PMKVTest.SimpleTest',
         'PMKVTest.BinaryKeyTest',
@@ -26,9 +26,6 @@ basic_test_spec = [
         'PMKVLargeTest.LargeAscendingAfterRecoveryTest',
         'PMKVLargeTest.LargeDescendingTest',
         'PMKVLargeTest.LargeDescendingAfterRecoveryTest',
-]
-
-recovery_test_spec = [
         'PMKVRecoveryTest.FillSeqRecoveryTest',
         'PMKVRecoveryTest.OverwriteSeqRecoveryTest',
         'PMKVRecoveryTest.DeleteSeqRecoveryTest',
@@ -37,13 +34,12 @@ recovery_test_spec = [
 test_result_home = '../'
 
 
-def parse_test_result(xml, test_spec):
+def parse_test_result(xml_file):
     ret = {}
     try:
-        tree = ET.parse(xml)
+        tree = ET.parse(xml_file)
     except:
-        for test_name in test_spec:
-            ret[test_name] = (False, 'Error: output file couldn\'t be produced')
+        print '%s not found. skip.' % xml_file
     else:
         root = tree.getroot()
         testsuites = root
@@ -55,22 +51,28 @@ def parse_test_result(xml, test_spec):
                 ret[test_name] = (passed, '' if passed else failure.attrib['message'])
 
     # write the result out to the file
-    for test_name in test_spec:
-        result = ret.get(test_name)
-        if not result:
-            result = (False, 'Error: output file couldn\'t be produced')
+    for test_name, result in ret.iteritems():
         with open(test_result_home + test_name, 'w') as f:
             f.write(result[1])
 
+def generate_failed_result(xml_dir, spec):
+    for test_name in spec:
+        if not os.path.exists(xml_dir + '/' + test_name + '.xml'):
+            result = (False, 'Error: output file couldn\'t be produced')
+            with open(test_result_home + test_name, 'w') as f:
+                f.write(result[1])
+
 
 if __name__ == '__main__':
-    if len(sys.argv) != 3:
-        print 'python %s xmlfile1 xmlfile2' % sys.argv[0]
+    if len(sys.argv) != 2:
+        print 'python %s xml_dir' % sys.argv[0]
         sys.exit(1)
 
-    xmlfile1 = sys.argv[1]
-    xmlfile2 = sys.argv[2]
+    xml_dir = sys.argv[1]
 
     # parse the input xml file
-    parse_test_result(xmlfile1, basic_test_spec)
-    parse_test_result(xmlfile2, recovery_test_spec)
+    for xml_file in os.listdir(xml_dir):
+        parse_test_result(xml_dir + '/' + xml_file)
+
+    # generate output files for failed test cases
+    generate_failed_result(xml_dir, spec)
