@@ -14,7 +14,7 @@ INC_PATH = $(foreach d, $(INC_DIR), -I$d)
 # library
 LIB_DIR = ../src $(PMEMKV_LIB)
 LIB_PATH = $(foreach d, $(LIB_DIR), -L$d)
-LIBS = -l:libpmkv.a -ldl -pthread -lpmemkv
+LIBS = -l:libpmkv.a -ldl -pthread -lpmemkv -lpmemobj
 
 bench:
 	mkdir -p bin
