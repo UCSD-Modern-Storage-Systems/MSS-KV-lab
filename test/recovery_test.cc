@@ -138,7 +138,7 @@ void sigsegv_handler(int sig)
 	printf("Error occurred during recovery!\n");
 }
 
-using PMKVRecoveryTest = PMKVBaseTest<SIZE, 300000, 10>;
+using PMKVRecoveryTest = PMKVBaseTest<SIZE, 100000, 10>;
 
 TEST_F(PMKVRecoveryTest, FillSeqRecoveryTest) {
 	pid_t pid;
@@ -160,7 +160,7 @@ TEST_F(PMKVRecoveryTest, FillSeqRecoveryTest) {
 			// register SIGSEGV handler
 			ASSERT_TRUE(signal(SIGSEGV, sigsegv_handler) != SIG_ERR);
 			// parent : sleep and kill
-			sleep(1);
+			usleep(100000);
 			kill(pid, SIGSEGV);
 			// try recovery
 			sleep(1);
@@ -170,7 +170,6 @@ TEST_F(PMKVRecoveryTest, FillSeqRecoveryTest) {
 			ASSERT_TRUE(signal(SIGSEGV, SIG_DFL) != SIG_ERR);
 		}
 	}
-	printf("passed!\n");
 }
 
 TEST_F(PMKVRecoveryTest, OverwriteSeqRecoveryTest) {
@@ -195,7 +194,7 @@ TEST_F(PMKVRecoveryTest, OverwriteSeqRecoveryTest) {
 			// register SIGSEGV handler
 			ASSERT_TRUE(signal(SIGSEGV, sigsegv_handler) != SIG_ERR);
 			// parent : sleep and kill
-			sleep(1);
+			usleep(100000);
 			kill(pid, SIGSEGV);
 			// try recovery
 			sleep(1);
@@ -205,7 +204,6 @@ TEST_F(PMKVRecoveryTest, OverwriteSeqRecoveryTest) {
 			ASSERT_TRUE(signal(SIGSEGV, SIG_DFL) != SIG_ERR);
 		}
 	}
-	printf("passed!\n");
 }
 
 TEST_F(PMKVRecoveryTest, DeleteSeqRecoveryTest) {
@@ -230,7 +228,7 @@ TEST_F(PMKVRecoveryTest, DeleteSeqRecoveryTest) {
 			// register SIGSEGV handler
 			ASSERT_TRUE(signal(SIGSEGV, sigsegv_handler) != SIG_ERR);
 			// parent : sleep and kill
-			sleep(1);
+			usleep(100000);
 			kill(pid, SIGSEGV);
 			// try recovery
 			sleep(1);
@@ -240,7 +238,6 @@ TEST_F(PMKVRecoveryTest, DeleteSeqRecoveryTest) {
 			ASSERT_TRUE(signal(SIGSEGV, SIG_DFL) != SIG_ERR);
 		}
 	}
-	printf("passed!\n");
 }
 
 int main(int argc, char **argv) {

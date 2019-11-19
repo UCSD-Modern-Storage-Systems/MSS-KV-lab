@@ -32,11 +32,11 @@ RECOVERY_TEST="PMKVRecoveryTest.FillSeqRecoveryTest
 # basic_test
 for TEST in $BASIC_TEST; do
 	echo "$TEST"
-	./bin/basic_test --gtest_filter=$TEST --gtest_output=xml:xml/$TEST.xml
+	PMEM_IS_PMEM_FORCE=1 ./bin/basic_test --gtest_filter=$TEST --gtest_output=xml:xml/$TEST.xml
 done
 
 # recovery_test
 for TEST in $RECOVERY_TEST; do
 	echo "$TEST"
-	./bin/recovery_test --gtest_filter=$TEST --gtest_output=xml:xml/$TEST.xml
+	PMEM_IS_PMEM_FORCE=1 ./bin/recovery_test --gtest_filter=$TEST --gtest_output=xml:xml/$TEST.xml
 done
