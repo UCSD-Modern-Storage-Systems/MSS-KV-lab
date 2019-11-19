@@ -15,7 +15,7 @@ include/pmkv.h.
 ```
 typedef struct {} pmkv;
 
-pmkv* pmkv_open(const char *path, size_t pool_size, int recover);
+pmkv* pmkv_open(const char *path, size_t pool_size, int force_create);
 void pmkv_close(pmkv *kv);
 int pmkv_get(pmkv *kv, const char *key, size_t key_size, char *out_val, size_t *out_val_size);
 int pmkv_put(pmkv *kv, const char *key, size_t key_size, const char *val, size_t val_size);
@@ -24,9 +24,9 @@ int pmkv_count_all(pmkv *kv, size_t *out_cnt);
 int pmkv_exists(pmkv *kv, const char *key, size_t key_size);
 ```
 
-`pmkv_open` should create a pool at `path` with the size `pool_size`. When `recover` is 0,
-it should create a new pool. When `recover` is 1, it should start from an existing pool
-at `path`. Specifying `recover` to 1 means the recovery of your PMKV.
+`pmkv_open` should create a pool at `path` with the size `pool_size`. When `force_create` is 1,
+it should create a new pool. When `force_create` is 0, it should start from an existing pool
+at `path`. Specifying `force_create` to 0 means the recovery of your PMKV.
 
 `pmkv_get` searches a value using a key specified by `key` and `key_size`. `key` indicates
 the start memory address where your key resides and `key_size` indicates the byte size of the key.
