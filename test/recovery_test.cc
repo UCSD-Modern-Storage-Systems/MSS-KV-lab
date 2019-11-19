@@ -136,6 +136,7 @@ protected:
 void sigsegv_handler(int sig)
 {
 	printf("Error occurred during recovery!\n");
+	exit(1);
 }
 
 using PMKVRecoveryTest = PMKVBaseTest<SIZE, 100000, 10>;
