@@ -44,7 +44,7 @@ lib: $(STATIC_LIB)
 	$(GCC) $(GCCFLAGS) $(INC_PATH) -c $< -o $@ $(LIB_PATH) $(LIBS)
 
 $(STATIC_LIB): $(PMKV_OBJ)
-	ar rsv $@ $<
+	ar rsv $@ $^
 
 .PHONY: clean
 
