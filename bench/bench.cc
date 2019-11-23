@@ -661,10 +661,9 @@ private:
         }
         shared.mu.Unlock();
 
-        for (int i = 1; i < n; i++) {
-            arg[0].thread->stats.Merge(arg[i].thread->stats);
+        for (int i = 0; i < n; i++) {
+            arg[i].thread->stats.Report(name);
         }
-        arg[0].thread->stats.Report(name);
 
         for (int i = 0; i < n; i++) {
             delete arg[i].thread;
