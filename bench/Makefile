@@ -20,7 +20,11 @@ bench:
 	mkdir -p bin
 	g++ $(GPPFLAGS) ./bench.cc ./port/port_posix.cc ./util/env.cc ./util/env_posix.cc ./util/histogram.cc ./util/logging.cc ./util/status.cc ./util/testutil.cc -o bin/$@ $(INC_PATH) $(LIB_PATH) $(LIBS)
 
-run: fillseq fillrandom overwrite readseq readrandom deleteseq deleterandom summarize
+run: build fillseq fillrandom overwrite readseq readrandom deleteseq deleterandom summarize
+
+build:
+	make clean
+	make
 
 fillseq:
 	./bin/bench --benchmarks=fillseq --threads=4 --num=1000000 --value_size=100 | tee fillseq_100.txt
