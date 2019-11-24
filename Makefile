@@ -11,3 +11,8 @@ test_all:
 	make -C src clean
 	make -C src
 	make -C test run
+
+bench_all:
+	make -C src clean
+	make -C src
+	make -C bench run
