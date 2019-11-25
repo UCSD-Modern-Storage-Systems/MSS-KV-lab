@@ -702,7 +702,7 @@ private:
         pmem::kv::status s;
         int64_t bytes = 0;
         for (int i = 0; i < num_; i++) {
-            const int k = seq ? i : (thread->rand.Next() % FLAGS_num);
+            const int k = seq ? (i + thread->tid * num_) : (thread->rand.Next() % FLAGS_num);
             GenerateKeyFromInt(k, FLAGS_num, &key);
             std::string value = std::string();
             value.append(value_size_, 'X');
@@ -732,7 +732,7 @@ private:
         std::unique_ptr<const char[]> key_guard;
         Slice key = AllocateKey(key_guard);
         for (int i = 0; i < reads_; i++) {
-            const int k = seq ? i : (thread->rand.Next() % FLAGS_num);
+            const int k = seq ? (i + thread->tid * num_) : (thread->rand.Next() % FLAGS_num);
             GenerateKeyFromInt(k, FLAGS_num, &key);
             std::string value;
             if (kv_->get(key.ToString(), &value) == pmem::kv::status::OK) found++;
@@ -761,7 +761,7 @@ private:
         std::unique_ptr<const char[]> key_guard;
         Slice key = AllocateKey(key_guard);
         for (int i = 0; i < num_; i++) {
-            const int k = seq ? i : (thread->rand.Next() % FLAGS_num);
+            const int k = seq ? (i + thread->tid * num_) : (thread->rand.Next() % FLAGS_num);
             GenerateKeyFromInt(k, FLAGS_num, &key);
             kv_->remove(key.ToString());
             thread->stats.FinishedSingleOp();
