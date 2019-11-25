@@ -28,9 +28,10 @@ output_files = [
 	'PMKVLargeTest.LargeAscendingAfterRecoveryTest',
 	'PMKVLargeTest.LargeDescendingTest',
 	'PMKVLargeTest.LargeDescendingAfterRecoveryTest',
-        'PMKVRecoveryTest.FillSeqRecoveryTest',
-        'PMKVRecoveryTest.OverwriteSeqRecoveryTest',
-        'PMKVRecoveryTest.DeleteSeqRecoveryTest',
+	'PMKVRecoveryTest.FillSeqRecoveryTest',
+	'PMKVRecoveryTest.OverwriteSeqRecoveryTest',
+	'PMKVRecoveryTest.DeleteSeqRecoveryTest',
+	'bench/perf.csv',
 ]
 input_files = ['src/pmkv.c']
 run_cmd = ['make', 'bench_all']
