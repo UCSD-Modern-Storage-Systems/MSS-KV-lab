@@ -38,7 +38,7 @@ run_cmd = ['make', 'bench_all']
 clean_cmd = ['make', 'clean']
 repo = "https://github.com/UCSD-Modern-Storage-Systems/MSS-KV-lab"
 reference_tag = "314bfbd09ab3a28b446742234851eeef2c29dcba"
-time_limit = 1800
+time_limit = 2400
 
 valid_options={
 }
