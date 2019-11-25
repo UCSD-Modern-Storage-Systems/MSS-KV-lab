@@ -29,9 +29,11 @@ if __name__ == "__main__":
 	# fillrandom   :      15.100 micros/op 66225 ops/sec;   65.7 MB/s
 	# fillrandom   :      15.047 micros/op 66460 ops/sec;   65.9 MB/s
 
+	files = []
 	tputs = []
 	for name, val_size in benchmarks:
 		file_name = '%s_%s.txt' % (name, val_size)
+		files.append(file_name)
 		tput = 0
 		with open(file_name) as f:
 			lines = f.readlines()[-4:]
@@ -41,9 +43,12 @@ if __name__ == "__main__":
 				assert bench_name == name
 				tput += int(words[4])
 		tputs.append(tput)
+	files.insert(0, 'AverageThroughput')
 	print tputs
 	mean = int(sum(tputs) / len(tputs))
 	print "avg: %d ops/sec" % mean
+	tputs.insert(0, mean)
+	tputs = map(lambda x: str(x), tputs)
 	with open(outfile_name, 'w') as f:
-		f.write("AverageThroughput\n")
-		f.write("%d" % mean)
+		f.write("%s\n" % ",".join(files))
+		f.write("%s\n" % ",".join(tputs))
