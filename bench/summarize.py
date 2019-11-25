@@ -35,13 +35,16 @@ if __name__ == "__main__":
 		file_name = '%s_%s.txt' % (name, val_size)
 		files.append(file_name)
 		tput = 0
-		with open(file_name) as f:
-			lines = f.readlines()[-4:]
-			for line in lines:
-				words = line.strip().split()
-				bench_name = words[0]
-				assert bench_name == name
-				tput += int(words[4])
+		try:
+			with open(file_name) as f:
+				lines = f.readlines()[-4:]
+				for line in lines:
+					words = line.strip().split()
+					bench_name = words[0]
+					assert bench_name == name
+					tput += int(words[4])
+		except:
+			tput = 0
 		tputs.append(tput)
 	files.insert(0, 'AverageThroughput')
 	print tputs
