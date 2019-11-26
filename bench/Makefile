@@ -27,32 +27,32 @@ build:
 	make
 
 fillseq:
-	numactl -N 0 -m 0 ./bin/bench --benchmarks=fillseq --threads=4 --num=500000 --value_size=100 | tee fillseq_100.txt
-	numactl -N 0 -m 0 ./bin/bench --benchmarks=fillseq --threads=4 --num=50000 --value_size=1024 | tee fillseq_1024.txt
+	numactl -N 0 -m 0 ./bin/bench --benchmarks=fillseq --db_size_in_gb=4 --threads=4 --num=500000 --value_size=100 | tee fillseq_100.txt
+	numactl -N 0 -m 0 ./bin/bench --benchmarks=fillseq --db_size_in_gb=4 --threads=4 --num=50000 --value_size=1024 | tee fillseq_1024.txt
 
 fillrandom:
-	numactl -N 0 -m 0 ./bin/bench --benchmarks=fillrandom --threads=4 --num=500000 --value_size=100 | tee fillrandom_100.txt
-	numactl -N 0 -m 0 ./bin/bench --benchmarks=fillrandom --threads=4 --num=50000 --value_size=1024 | tee fillrandom_1024.txt
+	numactl -N 0 -m 0 ./bin/bench --benchmarks=fillrandom --db_size_in_gb=4 --threads=4 --num=500000 --value_size=100 | tee fillrandom_100.txt
+	numactl -N 0 -m 0 ./bin/bench --benchmarks=fillrandom --db_size_in_gb=4 --threads=4 --num=50000 --value_size=1024 | tee fillrandom_1024.txt
 
 overwrite:
-	numactl -N 0 -m 0 ./bin/bench --benchmarks=fillrandom,overwrite --threads=4 --num=500000 --value_size=100 | tee overwrite_100.txt
-	numactl -N 0 -m 0 ./bin/bench --benchmarks=fillrandom,overwrite --threads=4 --num=50000 --value_size=1024 | tee overwrite_1024.txt
+	numactl -N 0 -m 0 ./bin/bench --benchmarks=fillrandom,overwrite --db_size_in_gb=4 --threads=4 --num=500000 --value_size=100 | tee overwrite_100.txt
+	numactl -N 0 -m 0 ./bin/bench --benchmarks=fillrandom,overwrite --db_size_in_gb=4 --threads=4 --num=50000 --value_size=1024 | tee overwrite_1024.txt
 
 readseq:
-	numactl -N 0 -m 0 ./bin/bench --benchmarks=fillseq,readseq --threads=4 --num=500000 --value_size=100 | tee readseq_100.txt
-	numactl -N 0 -m 0 ./bin/bench --benchmarks=fillseq,readseq --threads=4 --num=50000 --value_size=1024 | tee readseq_1024.txt
+	numactl -N 0 -m 0 ./bin/bench --benchmarks=fillseq,readseq --db_size_in_gb=4 --threads=4 --num=500000 --value_size=100 | tee readseq_100.txt
+	numactl -N 0 -m 0 ./bin/bench --benchmarks=fillseq,readseq --db_size_in_gb=4 --threads=4 --num=50000 --value_size=1024 | tee readseq_1024.txt
 
 readrandom:
-	numactl -N 0 -m 0 ./bin/bench --benchmarks=fillrandom,readrandom --threads=4 --num=500000 --value_size=100 | tee readrandom_100.txt
-	numactl -N 0 -m 0 ./bin/bench --benchmarks=fillrandom,readrandom --threads=4 --num=50000 --value_size=1024 | tee readrandom_1024.txt
+	numactl -N 0 -m 0 ./bin/bench --benchmarks=fillrandom,readrandom --db_size_in_gb=4 --threads=4 --num=500000 --value_size=100 | tee readrandom_100.txt
+	numactl -N 0 -m 0 ./bin/bench --benchmarks=fillrandom,readrandom --db_size_in_gb=4 --threads=4 --num=50000 --value_size=1024 | tee readrandom_1024.txt
 
 deleteseq:
-	numactl -N 0 -m 0 ./bin/bench --benchmarks=fillseq,deleteseq --threads=4 --num=500000 --value_size=100 | tee deleteseq_100.txt
-	numactl -N 0 -m 0 ./bin/bench --benchmarks=fillseq,deleteseq --threads=4 --num=50000 --value_size=1024 | tee deleteseq_1024.txt
+	numactl -N 0 -m 0 ./bin/bench --benchmarks=fillseq,deleteseq --db_size_in_gb=4 --threads=4 --num=500000 --value_size=100 | tee deleteseq_100.txt
+	numactl -N 0 -m 0 ./bin/bench --benchmarks=fillseq,deleteseq --db_size_in_gb=4 --threads=4 --num=50000 --value_size=1024 | tee deleteseq_1024.txt
 
 deleterandom:
-	numactl -N 0 -m 0 ./bin/bench --benchmarks=fillrandom,deleterandom --threads=4 --num=500000 --value_size=100 | tee deleterandom_100.txt
-	numactl -N 0 -m 0 ./bin/bench --benchmarks=fillrandom,deleterandom --threads=4 --num=50000 --value_size=1024 | tee deleterandom_1024.txt
+	numactl -N 0 -m 0 ./bin/bench --benchmarks=fillrandom,deleterandom --db_size_in_gb=4 --threads=4 --num=500000 --value_size=100 | tee deleterandom_100.txt
+	numactl -N 0 -m 0 ./bin/bench --benchmarks=fillrandom,deleterandom --db_size_in_gb=4 --threads=4 --num=50000 --value_size=1024 | tee deleterandom_1024.txt
 
 summarize:
 	python summarize.py perf.csv
